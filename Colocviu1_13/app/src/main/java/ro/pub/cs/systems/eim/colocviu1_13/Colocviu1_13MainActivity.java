@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ro.pub.cs.systems.eim.colocviu1_13.general.Constants;
 
@@ -26,6 +27,13 @@ public class Colocviu1_13MainActivity extends AppCompatActivity {
             String actions =  indications.getText().toString();
 
             switch (view.getId()) {
+                case R.id.button6:
+                    Intent intent = new Intent(getApplicationContext(), Colocviu1_13SecondaryActivity.class);
+                    String str = indications.getText().toString();
+                    intent.putExtra(Constants.INDICATE_DIRECTION, str);
+                    startActivityForResult(intent, Constants.SECONDARY_ACTIVITY_REQUEST_CODE);
+                    indications.setText("");
+                    break;
                 case R.id.button_east:
                     actions += ",East";
                     indications.setText(String.valueOf(actions));
@@ -34,6 +42,7 @@ public class Colocviu1_13MainActivity extends AppCompatActivity {
                     actions += ",West";
                     indications.setText(String.valueOf(actions));
                     break;
+                    
                 case R.id.button_north:
                     actions += ",North";
                     indications.setText(String.valueOf(actions));
@@ -59,7 +68,7 @@ public class Colocviu1_13MainActivity extends AppCompatActivity {
             indications.setText(savedInstanceState.getString(Constants.INDICATE_DIRECTION));
         } else {
             indications.setText("");
-        }
+}
     }
 
     @Override
@@ -81,6 +90,9 @@ public class Colocviu1_13MainActivity extends AppCompatActivity {
         indications = (TextView) findViewById(R.id.indications);
         indications.setText("");
 
+        navigate_to_second= (Button) findViewById(R.id.button6);
+        navigate_to_second.setOnClickListener(buttonClickListener);
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(Constants.INDICATE_DIRECTION)) {
                 indications.setText(savedInstanceState.getString(Constants.INDICATE_DIRECTION));
@@ -89,6 +101,14 @@ public class Colocviu1_13MainActivity extends AppCompatActivity {
             }
         } else {
             indications.setText("");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == Constants.SECONDARY_ACTIVITY_REQUEST_CODE) {
+            Toast.makeText(this, "The Button pressed was: " + intent.getStringExtra("Cancel"), Toast.LENGTH_LONG).show();
         }
     }
 }
